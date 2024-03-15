@@ -67,7 +67,7 @@ class PlayStoreCrawler:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", type=str, required=True)
+    parser.add_argument("--url", type=str, required=True, default='https://play.google.com/store/games')
     parser.add_argument("--file_path", type=str, required=False,
                         help="Path to save the collected game IDs. If not provided, the method will return the values.")
     args = parser.parse_args()

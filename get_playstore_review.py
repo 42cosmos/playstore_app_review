@@ -1,3 +1,5 @@
+import argparse
+
 import pandas as pd
 from tqdm import tqdm
 from google_play_scraper import reviews, Sort
@@ -16,25 +18,28 @@ def score_into_sentiment(score: int) -> str:
 
 
 if __name__ == "__main__":
-    url = 'https://play.google.com/store/games'
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--url", type=str, required=True, default='https://play.google.com/store/games')
+    parser.add_argument("--file_path", type=str, required=True, default="./playstore_review.csv",
+                        help="Path to save the collected game IDs. If not provided, the method will return the values.")
+    parser.add_argument("--language", type=str, required=False, default="ko")
+    parser.add_argument("--country", type=str, required=False, default="kr")
+    args = parser.parse_args()
 
     crawler = PlayStoreCrawler()
-    game_id_list = crawler.scroll_and_collect(url)
-    print(f"Number of collected data: {len(collected_data)}")
+    game_id_list = crawler.scroll_and_collect(args.url)
+    print(f"Number of collected data: {len(game_id_list)}")
     crawler.quit_driver()
-
-    lang = 'ko'
-    country = 'kr'
 
     all_review_list = []
     for game_id in tqdm(game_id_list):
         review_all, _ = reviews(
             game_id,
-            lang=lang,
-            country=country,
+            lang=args.language,
+            country=args.country,
             sort=Sort.NEWEST,
             count=1000,  # defaults to 100
-            filter_score_with=None # 모든 스코어 추출 ( 1 ~ 5 )
+            filter_score_with=None  # All score ( 1 ~ 5 )
         )
 
         all_review_list.extend(review_all)
@@ -43,4 +48,4 @@ if __name__ == "__main__":
     df = pd.DataFrame(review_list, columns=["txt", "score"])
     df.loc[:, "labels"] = df["score"].map(score_into_sentiment)
     print(df.shape)
-    df.to_csv("./playstore_review.csv", index=False)
+    df.to_csv(args.file_path, index=False)

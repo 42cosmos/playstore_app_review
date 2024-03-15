@@ -57,7 +57,7 @@ class PlayStoreCrawler:
 
     @staticmethod
     def _write_text_file(file_path, data: list):
-        with open(file_path, "w") as f:
+        with open(f"{file_path}.txt", "w") as f:
             for d in data:
                 f.write(f"{d}\n")
 

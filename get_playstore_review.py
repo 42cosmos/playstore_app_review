@@ -19,14 +19,17 @@ def score_into_sentiment(score: int) -> str:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", type=str, required=True, default='https://play.google.com/store/games')
-    parser.add_argument("--file_path", type=str, required=True, default="./playstore_review.csv",
+    parser.add_argument("--headless", action="store_true", help="If True, the browser will be headless.")
+    parser.add_argument("--url", type=str, default='https://play.google.com/store/games')
+    parser.add_argument("--file_path", type=str, default="./playstore_review.csv",
                         help="Path to save the collected game IDs. If not provided, the method will return the values.")
-    parser.add_argument("--language", type=str, required=False, default="ko")
-    parser.add_argument("--country", type=str, required=False, default="kr")
+    parser.add_argument("--language", type=str, default="ko")
+    parser.add_argument("--country", type=str, default="kr")
+    parser.add_argument("--score_into_sentiment", action="store_true", default=True,
+                        help="If True, the score will be converted into sentiment.")
     args = parser.parse_args()
 
-    crawler = PlayStoreCrawler()
+    crawler = PlayStoreCrawler(headless=args.headless)
     game_id_list = crawler.scroll_and_collect(args.url)
     print(f"Number of collected data: {len(game_id_list)}")
     crawler.quit_driver()
@@ -46,6 +49,7 @@ if __name__ == "__main__":
 
     review_list = list(map(lambda x: [x["content"], x["score"]], set(all_review_list)))
     df = pd.DataFrame(review_list, columns=["txt", "score"])
-    df.loc[:, "labels"] = df["score"].map(score_into_sentiment)
-    print(df.shape)
+    if args.score_into_sentiment:
+        df.loc[:, "labels"] = df["score"].map(score_into_sentiment)
+    print(f"DataFrame shape: {df.shape}")
     df.to_csv(args.file_path, index=False)

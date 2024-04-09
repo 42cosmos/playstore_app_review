@@ -1,0 +1,5 @@
+argparse
+selenium
+tqdm
+pandas
+google_play_scraper

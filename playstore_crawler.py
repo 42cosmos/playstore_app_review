@@ -14,14 +14,16 @@ def write_text_file(file_path, data: list):
 
 
 class PlayStoreCrawler:
-    def __init__(self):
+    def __init__(self, headless=True):
+        self.headless = headless
         self.driver = self._init_driver()
 
     def _init_driver(self):
         options = Options()
         user_agent = "Mozilla/5.0 (Linux; Android 9; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.83 Mobile Safari/537.36"
         options.add_argument('user-agent=' + user_agent)
-        # options.add_argument('headless')
+        if self.headless:
+            options.add_argument('headless')
         driver = webdriver.Chrome(options=options)
         return driver
 
@@ -33,7 +35,7 @@ class PlayStoreCrawler:
         SCROLL_PAUSE_TIME = 2
 
         while True:
-            for _ in range(4):
+            for _ in range(5):
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 time.sleep(SCROLL_PAUSE_TIME)
 

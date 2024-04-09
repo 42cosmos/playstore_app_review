@@ -3,6 +3,9 @@
 scraping google play store app id and crawling reviews
 
 ## How to use
+### 0. Check your chromedriver
+You need "chromedriver" to use this code. You can download it from [here](https://googlechromelabs.github.io/chrome-for-testing/). (Same version as your chrome)
+After download it, please put it in the same directory as the code.
 
 ### 1. Install required packages
 ```bash
@@ -10,11 +13,9 @@ pip install -r requirements.txt
 ```
 
 ### 2. Google App ID scraping
-You need "chromedriver" to use this code. You can download it from [here](https://googlechromelabs.github.io/chrome-for-testing/).
-After download it, please put it in the same directory as the code.
+((pass this section when you want to collect reviews))
 
-If you want to collect only game id, you can use the following command. But pass this section when you want to collect
-reviews.
+If you want to collect only game id, you can use the following command
 
 ```bash
 python3 playstore_crawler.py --url {your_url} --file_path {file_path_without_extension}

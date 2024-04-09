@@ -53,3 +53,4 @@ if __name__ == "__main__":
         df.loc[:, "labels"] = df["score"].map(score_into_sentiment)
     print(f"DataFrame shape: {df.shape}")
     df.to_csv(args.file_path, index=False)
+    print(f"{args.file_path} is saved.")
